@@ -31,7 +31,7 @@ Q5 =0 *3.1415/180;
 % T_23 = create_distal_T_ij(L1, 0    , 0  ,Q2);
 % T_34 = create_distal_T_ij(L2, 0    , 0  ,Q3);
 % T_45 = create_distal_T_ij(0 , -90,   0  ,Q4);
-% T_56 = create_distal_T_ij(0 , 0    , L3 ,Q5);
+% T_56 = create_distal_T_ij(L3 , 0    , 0 ,Q5);
 
 % T_13 = T_12 *T_23;
 % T_14 = T_12 *T_23  *T_34;
@@ -99,20 +99,21 @@ Q5 =0 *3.1415/180;
 
 
 % angles des liaisons pivots en RAD
-step = 360/10;
+step = 360/50;
 nb_points = round(360/step);
 disp(nb_points);
-disp(nb_points^3)
-xwork = zeros(nb_points^3) ; % reserving space for the variables, because
-ywork = zeros(nb_points^3) ; % otherwise they would be created later within a loop.
-zwork = zeros(nb_points^3);
+disp(nb_points^2)
+xwork = zeros(nb_points^2) ; % reserving space for the variables, because
+ywork = zeros(nb_points^2) ; % otherwise they would be created later within a loop.
+zwork = zeros(nb_points^2);
 i=1;
 q5 = 0;
-q1 = 0;
+q4 = -90;
+q3 = 0;
 max = 0;
-for q2 = 0:step:360
-    for q3 = 0:step:360
-        for q4 = 0:step:360
+for q1 = 0:step:360
+    for q2 = 0:step:360
+
                 L_q = [q1 q2 q3 q4 q5];
                 pos = forward_kinematics(L_q);
                 if (pos(1)^2+pos(2)^2+pos(3)^2)^0.5 >0
@@ -121,7 +122,6 @@ for q2 = 0:step:360
                     ywork(i) = pos(2);
                     zwork(i) = pos(3);
                     i = i+1;
-                end
         end
     end
 end    
@@ -129,10 +129,10 @@ end
 
 figure (3)
 set(3,'position')
-plot(0,0,'o')
-plot([-3,3],[0,0],'.-')
+plot3(0,0,0,'o')
+plot3([-3,-3,3,3,-3],[-3,3,3,-3,-3],[0,0,0,0,0],'.-')
 hold on
-plot(xwork,zwork,'rx')  % plot the  workspace of the robot
+plot3(xwork,ywork,zwork,'rx')  % plot the  workspace of the robot
 axis equal
 
 title('Workspace') ; xlabel('x (m)') ; ylabel('y (m)') ;
